@@ -1,12 +1,51 @@
 package ie.tudublin;
 
 import processing.core.PApplet;
+import java.util.ArrayList;
+
+
+
+public class Star
+{
+
+	Table table;
+
+	void setup() {
+
+  		table = new Table();
+  
+  		table.addColumn("number", Table.INT);
+  		table.addColumn("mass", Table.FLOAT);
+  		table.addColumn("name", Table.STRING);
+  
+  		TableRow row = table.addRow();
+  		row.setInt("number", 8);
+ 		row.setFloat("mass", 15.9994);
+  		row.setString("name", "Oxygen");
+  
+  		println(row.getInt("number"));   // Prints 8
+  		println(row.getFloat("mass"));   // Prints 15.9994
+  		println(row.getString("name"));  // Prints "Oxygen"
+	}
+
+	void loadStars()
+	{
+		Table table = loadTable("HabHYG15ly.csv", "header");
+		for(TableRow r:table.rows())
+		{
+			Star s = new Star(r);
+			stars.add(s);
+		}
+	}
+
+}
+
 
 public class StarMap extends PApplet
 {
 	public void settings()
 	{
-		size(500, 500);
+		size(800, 800);
 	}
 
 	public void setup() {
