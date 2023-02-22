@@ -1,84 +1,101 @@
 package ie.tudublin;
 
-import processing.core.PApplet;
 import java.util.ArrayList;
 
-
-
-public class Star
-{
-
-	Table table;
-
-	void setup() {
-
-  		table = new Table();
-  
-  		table.addColumn("number", Table.INT);
-  		table.addColumn("mass", Table.FLOAT);
-  		table.addColumn("name", Table.STRING);
-  
-  		TableRow row = table.addRow();
-  		row.setInt("number", 8);
- 		row.setFloat("mass", 15.9994);
-  		row.setString("name", "Oxygen");
-  
-  		println(row.getInt("number"));   // Prints 8
-  		println(row.getFloat("mass"));   // Prints 15.9994
-  		println(row.getString("name"));  // Prints "Oxygen"
-	}
-
-	void loadStars()
-	{
-		Table table = loadTable("HabHYG15ly.csv", "header");
-		for(TableRow r:table.rows())
-		{
-			Star s = new Star(r);
-			stars.add(s);
-		}
-	}
-
-}
-
+import processing.core.PApplet;
 
 public class StarMap extends PApplet
 {
 	public void settings()
 	{
-		size(800, 800);
+		size(500, 500);
 	}
 
-	public void setup() {
-		colorMode(HSB);
-		background(0);
-		
-		smooth();
-		
+    public void settings() {
+        size(800, 800);
+    }
+
+    Star first = null;
+    Star second = null;
 
 
-	}
 
+    public void mouseClicked()
+    {
+        for(Star s:stars)
+        {
+            float x = map(s.getxG(), -5, 5, border, width - border);
+            float y = map(s.getyG(), -5, 5, border, height - border);
 
-	public void drawGrid()
-	{
-		stroke(255);
-		float border = 50.0f;
+            if (dist(mouseX, mouseY, x, y) < 20)
+            {
+                if (first == null)
+                {
+                    first = s;
+                    break;
+                }
+                else if (second == null)
+                {
+                    second = s;
+                    break;
+                } 
+                else
+                {
+                    first = s;
+                    second = null;
+                    break;
+                }
+            }
+        }
+    }
 
-		int count = 10;
-		float gap = (width - (border * 2.0f)) / (float) count;
-		for(int i = -5 ; i <= 5 ; i ++)
-		{
-			float x = border + (gap * (i + 5));
-			line(x, border, x, height - border);
-			line(border, x, width - border, x);
-		}
-		
-	}
-		
-	public void draw()
-	{	
-		strokeWeight(2);		
+    public void setup() {
+        colorMode(RGB);
+        loadStars();
+        printStars();
 
-		drawGrid();
-	}
+        border = width * 0.1f;
+    }
+
+    public void drawStars()
+    {
+        for(Star s:stars)
+        {
+            s.render(this);
+        }
+    }
+
+    public void draw() 
+    {
+        background(0);
+        drawGrid();
+        drawStars();
+
+        if (first != null)
+        {
+
+            float x = map(first.getxG(), -5, 5, border, width - border);
+            float y = map(first.getyG(), -5, 5, border, height - border);
+
+            if (second != null)
+            {
+                float x2 = map(second.getxG(), -5, 5, border, width - border);
+                float y2 = map(second.getyG(), -5, 5, border, height - border);
+
+                stroke(255, 255, 0);
+                line(x, y, x2, y2);
+
+                float dist = dist(first.getxG(), first.getyG(), first.getzG(), second.getxG(), second.getyG(), second.getzG());
+
+                fill(255);
+                textAlign(CENTER, CENTER);
+                text("Distance between: " + first.getDisplayName() + " and " + second.getDisplayName() + " is " + dist + " parsecs", width / 2, height - (border * 0.5f));
+            }
+            else
+            {
+                stroke(255, 255, 0);
+                line(x, y, mouseX, mouseY);
+            }
+        }
+    }
 }
