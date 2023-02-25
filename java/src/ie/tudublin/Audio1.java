@@ -13,6 +13,7 @@ public class Audio1 extends PApplet
     AudioInput ai;
     AudioBuffer ab;
 
+
     int mode = 0;
 
     float y = 0;
