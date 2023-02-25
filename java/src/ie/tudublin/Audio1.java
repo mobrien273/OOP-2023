@@ -80,6 +80,7 @@ public class Audio1 extends PApplet
         float cx = width / 2;
         float cy = height / 2;
 
+        
         switch (mode) {
 			case 0:
                 background(0);
