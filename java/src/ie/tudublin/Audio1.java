@@ -94,9 +94,35 @@ public class Audio1 extends PApplet
                 }
                 break;
         case 1:
-            background(0);            
+            background(0);
+				for (int i = 0; i < ab.size(); i++) 
+				{
+					// float c = map(ab.get(i), -1, 1, 0, 255);
+					float c = map(i, 0, ab.size(), 50, 255);// mouseX/2 + mouseY/2
+					stroke(c, 255, 255);
+					float f = lerpedBuffer[i] * halfH * 4.0f;
+					line(0, i , f,  i);
+					line(width, i, width -f , i);
+					line(i,0,i,f);
+					line(i, height, i,height -f);
+				}
+				break;            
             break;
-
+        case 2:
+                background(0);
+				for (int i = 0; i < ab.size(); i++) 
+				{
+					// float c = map(ab.get(i), -1, 1, 0, 255);
+					float c = map(i, 0, ab.size(), 0, 255);
+					stroke(c, 255, 255);
+					float f = ab.get(i) * halfH;
+					line(width/2, height/2, i, halfH - f);
+				}
+				fill(smoothedAmplitude * 800.0f,255,255);
+				noStroke();
+				circle(cx, cy, (smoothedAmplitude * 2000.0f));
+				break;
+            break;
         }
         
 
